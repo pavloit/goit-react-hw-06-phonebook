@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from 'react-redux';
+import { actions } from '../contactsSlice'; 
 import styled from 'styled-components';
 
 
@@ -50,16 +52,12 @@ const AddButton = styled.button`
 }
 `;
 
-const ContactForm = ({ onAdd }) => {
-    const [name, setName] = useState('');
-    const [number, setNumber] = useState('');
+const ContactForm = () => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
   
-    const handleSubmit = (event) => {
-    event.preventDefault();
-    onAdd({ id: nanoid(), name, number });
-    setName('');
-    setNumber('');
-    };
+  const contacts = useSelector(state => state.contacts.contacts);
   
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -72,6 +70,23 @@ const ContactForm = ({ onAdd }) => {
     setNumber(input);
   }
 
+    const handleSubmit = (event) => {
+    event.preventDefault();
+    const newContact = { id: nanoid(), name, number };
+
+       const doesExist = contacts.some(
+      contact => contact.name.toLowerCase() === newContact.name.toLowerCase()
+    );
+
+    if (doesExist) {
+      alert(`${newContact.name} is already in contacts.`);
+    } else {
+      dispatch(actions.addContact(newContact));
+    }
+     setName('');
+     setNumber('');
+  };     
+      
       return (
         <FormContainer onSubmit={handleSubmit}>
           <LabelName>

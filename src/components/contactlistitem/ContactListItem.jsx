@@ -1,3 +1,5 @@
+import { useDispatch } from 'react-redux';
+import { actions } from '../contactsSlice'; 
 import styled from 'styled-components';
 
 const ButtonDel = styled.button`
@@ -13,11 +15,15 @@ const ButtonDel = styled.button`
   cursor: pointer;
 `;
 
-const ContactListItem = ({ contact:{name, number}, onDelete }) => (
-  <li>
-    <ButtonDel title = {`remove ` + name + ` contact` } onClick={onDelete}>&#xD7;</ButtonDel>
-    {name}: {number}
-  </li>
-);
+const ContactListItem = ({ contact:{name, number, id} }) => {
+  const dispatch = useDispatch();
+
+  return (
+    <li>
+      <ButtonDel title = {`remove ` + name + ` contact` } onClick={() => dispatch(actions.deleteContact(id))}>&#xD7;</ButtonDel>
+      {name}: {number}
+    </li>
+  );
+};
 
 export default ContactListItem;

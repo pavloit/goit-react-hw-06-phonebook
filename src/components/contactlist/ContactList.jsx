@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import ContactListItem from '../contactlistitem/ContactListItem';
 import styled from 'styled-components';
 
@@ -6,16 +7,23 @@ const ItemList = styled.ul`
  color: darkblue;
 `;
 
-const ContactList = ({ contacts, onDelete }) => (
+const ContactList = () => {
+  const { contacts, filter } = useSelector(state => state.contacts);
+  const filteredContacts = contacts.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
+
+  return (
     <ItemList>
-      {contacts.map((contact) => (
-        <ContactListItem
-          key={contact.id}
-          contact={contact}
-          onDelete={() => onDelete(contact.id)}
-        />
+      {filteredContacts.map((contact) => (
+        <ContactListItem key={contact.id} contact={contact} />
       ))}
     </ItemList>
   );
+};
+
+
+
+
 
 export default ContactList;
